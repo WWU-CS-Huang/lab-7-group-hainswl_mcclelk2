@@ -34,3 +34,14 @@ application {
     // Define the main class for the application.
     mainClass = 'lab7.Huffman'
 }
+
+run {
+    standardInput = System.in
+}
+
+test {
+    testLogging {
+    showStandardStreams = true;
+    exceptionFormat 'full'
+    }
+}
