@@ -23,4 +23,29 @@ public static Map<Character, Integer> map;
             map.put(input.charAt(i), (map.get(input.charAt(i) + 1)));
         }
     }
+
+    public class Node{
+        //Fields for node.
+        int frequency;
+        Character character;
+        Node left;
+        Node right;
+
+        //Constructor for leaf nodes
+        Node(int frequency, Character character){
+            this.left = null; //leaf node, so set node's children to null.
+            this.right = null;
+            this.frequency = frequency;
+            this.character = character;
+        }
+
+        //Constructor for internal nodes
+        Node(int frequency, Node left, Node right){
+            this.left = left;
+            this.right = right;
+            this.frequency = frequency;
+            this.character = null; //Internal node, so set node's character field to null.
+        }
+
+    }
 }
