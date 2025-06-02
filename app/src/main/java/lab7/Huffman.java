@@ -3,19 +3,30 @@
  */
 package lab7;
 import java.util.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 
 public class Huffman {
 
 public static Map<Character, Integer> map;
-    public String getGreeting() {
-        return "Hello World!";
-    }
 
     public static void main(String[] args) {
-        System.out.println(new Huffman().getGreeting());
+        String fileName = args[0];
+        File file = new File(fileName);
+        Scanner scan;
+        try{
+            scan = new Scanner(file);
+        }   
+        catch (FileNotFoundException e){
+            return;
+        }
         map = new HashMap<>();
-        PriorityQueue<Character> tree = new PriorityQueue();
+        countFrequencies(scan.toString());
+        PriorityQueue<Node> tree = new PriorityQueue<Node>(map.size(), new NodeComparator());
+        buildTree(tree);
+
     }
 
     public static void countFrequencies(String input){
@@ -24,7 +35,14 @@ public static Map<Character, Integer> map;
         }
     }
 
-    public class Node{
+    public static void buildTree(PriorityQueue<Node> tree){
+        //Create Nodes out of our frequency count
+        //Take two smallest frequency nodes (leaf or not)
+
+    }
+
+
+    class Node{
         //Fields for node.
         int frequency;
         Character character;
@@ -46,6 +64,20 @@ public static Map<Character, Integer> map;
             this.frequency = frequency;
             this.character = null; //Internal node, so set node's character field to null.
         }
+    }
 
+    //Override the priority queue comparison to compare frequencies
+    class NodeComparator implements Comparator<Node>{
+        public int compare(Node n1, Node n2){
+            if(n1.frequency < n2.frequency){
+                return 1;
+            }
+            else if(n1.frequency > n2.frequency){
+                return -1;
+            }
+            else{
+                return 0;
+            }
+        }
     }
 }
