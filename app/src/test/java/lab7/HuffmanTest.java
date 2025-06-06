@@ -2,7 +2,8 @@ package lab7;
 /*
  * Authors: Lawson Hainsworth & Koben M
  * Date: 5/5/2025
- * Purpose: COMPLETE!
+ * Purpose: Contains a couple brief unit tests for the Huffman class. Briefly checks that countFrequencies()
+ * and buildHuffmanTree() work properly.
  */
 
 import org.junit.Before;
@@ -13,8 +14,8 @@ import java.util.Map;
 
 public class HuffmanTest {
 
-    @Test
-    public void testCountFrequencies() { //Test that countFrequencies method correctly counts character frequencies
+    @Test //Test that countFrequencies method correctly counts character frequencies
+    public void testCountFrequencies() { 
         //set input string
         String input = "hello";
 
@@ -33,8 +34,8 @@ public class HuffmanTest {
         assertEquals("Frequency map should match expected map", expected, huffmanTree.map);
     }
 
-    @Test
-    public void testBuildHuffmanTree() { // Test that buildHuffmanTree constructs a valid Huffman tree
+    @Test // Test that buildHuffmanTree constructs a valid Huffman tree
+    public void testBuildHuffmanTree() { 
         //set input string
         String input = "abbaca";
 

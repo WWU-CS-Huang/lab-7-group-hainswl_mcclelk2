@@ -2,7 +2,9 @@ package lab7;
 /*
  * Authors: Lawson Hainsworth & Koben M
  * Date: 5/5/2025
- * Purpose: COMPLETE!
+ * Purpose: Implements a Huffman code tree to compress and decompress text. Main method first reads an 
+ * input string from a file, builds a freqeuncy-based huffman tree, generates huffman codes for each character,
+ * encodes the input text into a bitstring, and then decodes that to verify it works properly. 
  */
 
 import java.util.*;
@@ -14,8 +16,8 @@ public class Huffman {
     public HashMap<Character, Integer> map = new HashMap<>(); //'map' (for frequency map) is a class-wide variable
     public Node root = null; //root Node of huffman tree. Default null, until buildHuffmanTree is called
 
-    /*
-     * COMPLETE SPEC!
+    /* Reads input from a file, builds a Huffman tree, encodes and decodes the input string, and prints results.
+     * Pre: (args.length > 0), and args[0] exists and is readable.
      */
     public static void main(String[] args) {
         //get file from first command line arg
@@ -44,27 +46,34 @@ public class Huffman {
         //Build the huffman tree.
         huffmanTree.buildHuffmanTree(inputString);
 
+        //get encoded inputString, then decode the encoded string.
+        String encodedString = huffmanTree.encodeString(inputString);
+        String decodedString = huffmanTree.decodeBitString(encodedString);
         //When the input string is less than 100 characters...
         if(inputString.length() < 100){
             //print original input string
             System.out.println("Input string: " + inputString);
 
             //print the encoded bitstring
-            String encodedString = huffmanTree.encodeString(inputString);
+
             System.out.println("Encoded string: " + encodedString);
 
             //print the result of decoding the encoded bitstring
-            System.out.println("Decoded string: " + huffmanTree.decodeBitString(encodedString));
+            System.out.println("Decoded string: " + decodedString);
         }
 
-        //print a boolean that confirms decoded equals encoded
+        //print a boolean that confirms decoded equals input
+        System.out.println("Decoded equals input: " + decodedString.equals(inputString));
 
-        //print the compression ratio
+
+        //get, and then print the compression ratio
+        double compressionRatio = ((double) encodedString.length() / (double) inputString.length() / 8.0);
+        System.out.println("Compression ratio: " + compressionRatio);
 
     }
 
-    /* Counts the frequency of each character in the input string and updates the frequency map.
-     * Pre: Input is non-null
+    /* Counts the frequency of each character in the input string and builds the frequency map.
+     * Pre: (Input != null).
      */
     public void countFrequencies(String input){
         for(int i = 0; i < input.length(); i++){
@@ -73,10 +82,8 @@ public class Huffman {
         }
     }
 
-    /* Constructs a Huffman tree by first calling countFrequenices, before 
-     * building the huffman tree with a priority queue. Also sets the variable 'root' to the root of the 
-     * resulting huffman tree.
-     * Pre: Input string non-empty
+    /* Constructs a Huffman tree given an input string, and then sets the root of the tree.
+     * Pre: (Input.lenghth() > 0).
      */
     public void buildHuffmanTree(String input){
         //first, call count frequencies.
@@ -111,7 +118,7 @@ public class Huffman {
     }
 
     /*  Creates a map, with every character in the huffman tree as the keys, and their bitstring 'paths' as their values
-     *  Pre:
+     *  Pre: (root != null).
      */
     public HashMap<Character, String> huffmanCodeMap(Node root){
         HashMap<Character, String> codeMap = new HashMap<>();
@@ -122,7 +129,7 @@ public class Huffman {
     }
 
     /* Does the recursive building of the code map for the huffmanCodeMap method.
-     * Pre: curNode != null
+     * Pre: (curNode != null), and (codeMap != null).
      */
     private void buildHuffmanCodeMap(Node curNode, String path, Map<Character, String> codeMap){
         //leaf is node (Base Case)
@@ -145,25 +152,26 @@ public class Huffman {
     }
 
 
-    /* (use map of <character, huffmanCode> for encode)
-     * 
+    /* Encodes the input string into a Huffman-encoded bitstring using the built tree.
+     * (OriginalString != null), (root != null), and buildHuffmanTree() must be called.
      */
     public String encodeString(String originalString){
-        String bitString = "";
+        //Use string builder for efficency!
+        StringBuilder bitString = new StringBuilder();
 
         //For encode, build a map;
         HashMap<Character, String> codeMap = huffmanCodeMap(root);
 
-
         //Traverse through huffman tree, create a bitString of the input using the huffmanCodeMap
         for(int i = 0; i < originalString.length(); i++){ //for every character in original string...
-            bitString = bitString + codeMap.get(originalString.charAt(i)); //convert the current Char to it's huffman code, and append it to the bitstring.
+            bitString.append(codeMap.get(originalString.charAt(i))); //convert the current Char to it's huffman code, and append it to the bitstring.
         }
-        return bitString;
+        
+        return bitString.toString();
     }
 
     /* (use tree traversal for decode, not map)
-     * Pre: Huffmantree must be built, and must input a valid bitString.
+     * Pre: (bitString != null), (root != null), and buildHuffmanTree() must be called.
      */
     public String decodeBitString(String bitString){
         String decodedString = "";
@@ -173,6 +181,7 @@ public class Huffman {
     }
 
     /* Returns true if given node is leaf, and false if otherwise.
+     * Pre: (node != null).
      */
     private boolean isLeafNode(Node node){
         if((node.left == null) && (node.right == null) && (node.character != null)){
@@ -182,8 +191,9 @@ public class Huffman {
         }
     }
 
-    /*
-     * COMPLETE SPEC!
+    /* Represents a node in the Huffman tree. Implements Comparable<Node> for Priority Queue, based on frequency.
+     * Has a constructor for leaf nodes, and internal nodes.
+     * Pre: Both Nodes in compareTo must be non-null.
      */
     public static class Node implements Comparable<Node>{ //Since the 'add' method in PriorityQueue uses comparisons, must specify the field by which to compare nodes by
         //Fields for node.
