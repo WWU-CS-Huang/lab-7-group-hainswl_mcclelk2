@@ -22,6 +22,7 @@ public class Huffman {
     public static void main(String[] args) {
         //get file from first command line arg
         String fileName = args[0];
+
         File file = new File(fileName);
         Scanner scan;
         try{
@@ -32,13 +33,19 @@ public class Huffman {
             return;
         }
         
-        //get input string (may need to check that scan isn't null);
-        String inputString = "";
+        //get input string (use stringBuilder to efficently build string).
+        StringBuilder inputStringBuilder = new StringBuilder();
         while(scan.hasNextLine()){
-            inputString = inputString + scan.nextLine();
+            inputStringBuilder.append(scan.nextLine());
         }
-
         scan.close();
+
+        String inputString = inputStringBuilder.toString();
+
+        //if inputString was empty, exit.
+        if(inputString.length() == 0){ 
+            System.out.println("Empty input.");
+        }
 
         //Create a new huffman object.
         Huffman huffmanTree = new Huffman();
