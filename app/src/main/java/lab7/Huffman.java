@@ -170,26 +170,32 @@ public class Huffman {
         return bitString.toString();
     }
 
-    /* (use tree traversal for decode, not map)
-     * Pre: (bitString != null), (root != null).
+    /* Decodes a Huffman-encoded bitstring back into  it's original string by
+     * traversing the huffman tree according to each bit (if '0' go left, if '1' go right).
+     * Pre: (bitString != null), and (root != null).
      */
     public String decodeBitString(String bitString){
-        String decodedString = "";
+        //Use StringBuilder for efficency!
+        StringBuilder decodedString = new StringBuilder();
         Node curNode = root;
-        for(int i = 0; i < bitString.length(); i++){
-            if(isLeafNode(curNode)){
-                decodedString += curNode.character;
-                curNode = root;
-            }
-            if(bitString.charAt(i) == 1){
+
+        for(char bit : bitString.toCharArray()){ //For every bit in the bitString...
+
+            if(bit == '1'){ //If current bit is 1, go right
                 curNode = curNode.right;
             }
-            else{
+            else{ //Otherwise (bit is 0) so go left
                 curNode = curNode.left;
+            }
+
+            //Afterward, check if leaf node. If so, add character in leaf to decodedString, and set curNode node back to root
+            if(isLeafNode(curNode)){
+                decodedString.append(curNode.character);
+                curNode = root;
             }
         }
         
-        return decodedString;
+        return decodedString.toString();
     }
 
 
