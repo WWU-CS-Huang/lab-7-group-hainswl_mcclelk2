@@ -41,9 +41,9 @@ public class HuffmanTest {
 
         //create a huffmanTree object
         Huffman huffmanTree = new Huffman();
-
+        huffmanTree.countFrequencies(input);
         //get the root of the huffmanTree by calling buildHuffmanTree.
-        huffmanTree.buildHuffmanTree(input);
+        huffmanTree.buildHuffmanTree();
 
         //Make sure root is not null.
         assertNotNull("Root node should not be null", huffmanTree.root);

@@ -43,8 +43,11 @@ public class Huffman {
         //Create a new huffman object.
         Huffman huffmanTree = new Huffman();
 
+        //Create frequency hashMap to store characters and frequency
+        huffmanTree.countFrequencies(inputString);
+
         //Build the huffman tree.
-        huffmanTree.buildHuffmanTree(inputString);
+        huffmanTree.buildHuffmanTree();
 
         //get encoded inputString, then decode the encoded string.
         String encodedString = huffmanTree.encodeString(inputString);
@@ -85,10 +88,7 @@ public class Huffman {
     /* Constructs a Huffman tree given an input string, and then sets the root of the tree.
      * Pre: (Input.lenghth() > 0).
      */
-    public void buildHuffmanTree(String input){
-        //first, call count frequencies.
-        countFrequencies(input);
-
+    public void buildHuffmanTree(){
         //Intiate a priority queue to build the huffman tree.
         PriorityQueue<Node> treeBuilder = new PriorityQueue<Node>();
 
@@ -171,14 +171,27 @@ public class Huffman {
     }
 
     /* (use tree traversal for decode, not map)
-     * Pre: (bitString != null), (root != null), and buildHuffmanTree() must be called.
+     * Pre: (bitString != null), (root != null).
      */
     public String decodeBitString(String bitString){
         String decodedString = "";
         Node curNode = root;
+        for(int i = 0; i < bitString.length(); i++){
+            if(isLeafNode(curNode)){
+                decodedString += curNode.character;
+                curNode = root;
+            }
+            if(bitString.charAt(i) == 1){
+                curNode = curNode.right;
+            }
+            else{
+                curNode = curNode.left;
+            }
+        }
         
         return decodedString;
     }
+
 
     /* Returns true if given node is leaf, and false if otherwise.
      * Pre: (node != null).
